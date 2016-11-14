@@ -42,7 +42,8 @@ public class ContactDaoHibernateImpl implements ContactDao{
 
     @Override
     public List<Contact> findAllWithDetails() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return sessionFactory.getCurrentSession().
+                getNamedQuery("Contact.findAllWithDetail").list();
     }
 
     @Override

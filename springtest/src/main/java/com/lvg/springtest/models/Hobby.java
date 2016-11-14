@@ -33,7 +33,7 @@ public class Hobby implements Serializable{
     }
 
     @ManyToMany
-    @JoinTable(name = "contact_hoby_detail",
+    @JoinTable(name = "contact_hobby_detail",
             joinColumns = @JoinColumn(name="HOBBY_ID"),
             inverseJoinColumns = @JoinColumn(name="CONTACT_ID"))
     public Set<Contact> getContacts() {

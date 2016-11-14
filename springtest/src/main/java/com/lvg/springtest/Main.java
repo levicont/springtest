@@ -1,17 +1,11 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.lvg.springtest;
 
 import com.lvg.springtest.beans.Simple;
 import com.lvg.springtest.dao.ContactDao;
 import com.lvg.springtest.models.Contact;
+import com.lvg.springtest.models.ContactTelDetail;
 import java.util.List;
 import org.apache.log4j.Logger;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.GenericXmlApplicationContext;
 
 /**
@@ -31,14 +25,24 @@ public class Main {
         simpleBean.printName();
         
         ContactDao contactDao = ctx.getBean("contactDao", ContactDao.class);
-        List<Contact> contacts = contactDao.findAll();
-        printContacts(contacts);
+        List<Contact> contacts = contactDao.findAllWithDetails();
+        printContactsWithDetails(contacts);
     }
     
     private static void printContacts(List<Contact> contacts){
         LOG.debug("Printing all contacts");
         for(Contact c : contacts){
             System.out.println(c);
+        }
+    }
+    
+    private static void printContactsWithDetails(List<Contact> contacts){
+        LOG.debug("Printing all contacts");
+        for(Contact c : contacts){
+            System.out.println(c);
+            for(ContactTelDetail ctd : c.getContactTelDetails()){
+                System.out.println(ctd);
+            }
         }
     }
 }

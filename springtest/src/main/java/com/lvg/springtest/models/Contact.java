@@ -13,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -26,6 +28,10 @@ import javax.persistence.Version;
 
 @Entity
 @Table(name = "contact")
+@NamedQueries({
+@NamedQuery(name = "Contact.findAllWithDetail",
+        query = "select distinct c from Contact c left join fetch c.contactTelDetails left join fetch c.hobbies")
+})
 public class Contact implements Serializable{
     
     private Long id;
@@ -99,7 +105,7 @@ public class Contact implements Serializable{
     }
 
     @ManyToMany
-    @JoinTable(name = "contact_hoby_detail",
+    @JoinTable(name = "contact_hobby_detail",
             joinColumns = @JoinColumn(name="CONTACT_ID"),
             inverseJoinColumns = @JoinColumn(name="HOBBY_ID"))
     public Set<Hobby> getHobbies() {
