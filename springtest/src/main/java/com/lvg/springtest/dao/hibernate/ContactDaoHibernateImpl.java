@@ -48,17 +48,22 @@ public class ContactDaoHibernateImpl implements ContactDao{
 
     @Override
     public Contact findById(Long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (Contact)sessionFactory.getCurrentSession().
+                getNamedQuery("Contact.findById").
+                setParameter("id", id).uniqueResult();
     }
 
     @Override
     public Contact save(Contact contact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sessionFactory.getCurrentSession().saveOrUpdate(contact);
+        LOG.info("Contact saved with id: "+contact.getId());
+        return contact;
     }
 
     @Override
     public void delete(Contact contact) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        sessionFactory.getCurrentSession().delete(contact);
+        LOG.info("Contact deleted with id: "+contact.getId());
     }
     
     

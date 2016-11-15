@@ -7,6 +7,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EntityResult;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.SqlResultSetMapping;
+import javax.persistence.SqlResultSetMappings;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -29,9 +32,16 @@ import javax.persistence.Version;
 @Entity
 @Table(name = "contact")
 @NamedQueries({
+@NamedQuery(name = "Contact.findAll",
+        query = "select distinct c from Contact c"),    
 @NamedQuery(name = "Contact.findAllWithDetail",
-        query = "select distinct c from Contact c left join fetch c.contactTelDetails left join fetch c.hobbies")
+        query = "select distinct c from Contact c left join fetch c.contactTelDetails left join fetch c.hobbies"),
+@NamedQuery(name = "Contact.findById",
+        query = "select distinct c from Contact c left join fetch c.contactTelDetails left join fetch c.hobbies "
+                + "where c.id = :id")
 })
+@SqlResultSetMapping(name = "contactResult",
+        entities = @EntityResult(entityClass = Contact.class))
 public class Contact implements Serializable{
     
     private Long id;
@@ -102,6 +112,11 @@ public class Contact implements Serializable{
 
     public void setContactTelDetails(Set<ContactTelDetail> contactTelDetails) {
         this.contactTelDetails = contactTelDetails;
+    }
+    
+    public void addContactTelDetail(ContactTelDetail ctd){
+        ctd.setContact(this);
+        contactTelDetails.add(ctd);
     }
 
     @ManyToMany
