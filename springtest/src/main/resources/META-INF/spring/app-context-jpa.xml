@@ -7,6 +7,7 @@
        xmlns:p="http://www.springframework.org/schema/p"
        xmlns:jdbc="http://www.springframework.org/schema/jdbc"
        xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:jpa="http://www.springframework.org/schema/data/jpa"
        xsi:schemaLocation="http://www.springframework.org/schema/jdbc 
 	 http://www.springframework.org/schema/jdbc/spring-jdbc.xsd         
          http://www.springframework.org/schema/beans 
@@ -17,10 +18,12 @@
 	 http://www.springframework.org/schema/util/spring-util.xsd
          http://www.springframework.org/schema/context 
 	 http://www.springframework.org/schema/context/spring-context.xsd
+         http://www.springframework.org/schema/data/jpa 
+	 http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
         ">
     <jdbc:embedded-database id="dataSource" type="H2">
-        <jdbc:script location = "classpath:db/schema-init.sql"/>
-        <jdbc:script location = "classpath:db/data-init.sql"/>
+        <jdbc:script location = "classpath:META-INF/db/schema-init.sql"/>
+        <jdbc:script location = "classpath:META-INF/db/data-init.sql"/>
     </jdbc:embedded-database>      
     
     <bean id="transactionManager" 
@@ -47,8 +50,15 @@
                 <prop key="hibernate.show_sql">true</prop>
             </props>
         </property>
-    </bean> 
-    
+    </bean>
+    <!-- This constructions for providing Services with Spring Data JPA -->
+    <jpa:repositories base-package="com.lvg.springtest"
+                       entity-manager-factory-ref="emf" 
+                       transaction-manager-ref="transactionManager"
+                       />
+    <jpa:auditing auditor-aware-ref="auditorAwareBean"/>
+    <bean id="auditorAwareBean" class="com.lvg.springtest.beans.auditors.AuditorAwareBean"/>
+       
     <!-- This beans for providing DAO with Hibernate --> 
     <bean id="sessionFactory" 
           class="org.springframework.orm.hibernate4.LocalSessionFactoryBean"

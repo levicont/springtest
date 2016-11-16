@@ -5,6 +5,10 @@ INSERT INTO Contact (first_name, last_name, birth_date)
 INSERT INTO Contact (first_name, last_name, birth_date)
     VALUES ('John', 'Smith', '1964-02-28');
 
+INSERT INTO Contact_Audit (first_name, last_name, birth_date)
+    VALUES ('Leo', 'Mayer', '1984-05-03');
+INSERT INTO Contact_Audit (first_name, last_name, birth_date)
+    VALUES ('Rick', 'Moon', '1974-07-02');
 
 INSERT INTO Contact_tel_detail (contact_id, tel_type, tel_number)
     VALUES ('1', 'Mobile', '19640228');

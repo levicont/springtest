@@ -3,12 +3,14 @@ package com.lvg.springtest;
 import com.lvg.springtest.beans.Simple;
 import com.lvg.springtest.dao.ContactDao;
 import com.lvg.springtest.models.Contact;
+import com.lvg.springtest.models.ContactAudit;
 import com.lvg.springtest.models.ContactSummary;
 import com.lvg.springtest.models.ContactTelDetail;
 import com.lvg.springtest.models.Hobby;
 import com.lvg.springtest.services.ContactService;
 import com.lvg.springtest.services.ContactSummaryService;
 import com.lvg.springtest.services.jpa.ContactSummaryUntypeJpaImpl;
+import com.lvg.springtest.services.springdatajpa.ContactAuditService;
 import java.util.Date;
 import java.util.List;
 import org.apache.log4j.Logger;
@@ -25,12 +27,12 @@ public class Main {
     public static void main(String[] args) {
         LOG.debug("Start application...");
         GenericXmlApplicationContext ctx;
-        ctx = new GenericXmlApplicationContext("/spring/app-context-jpa.xml");        
+        ctx = new GenericXmlApplicationContext("META-INF/spring/app-context-jpa.xml");        
        
         /** Testing Hibernate ContactDao ***
          * 
         GenericXmlApplicationContext ctx;
-        ctx = new GenericXmlApplicationContext("/spring/app-context.xml");
+        ctx = new GenericXmlApplicationContext("META-INF/spring/app-context.xml");
         Simple simpleBean = ctx.getBean("simpleBean", Simple.class);
         simpleBean.printName();
         
@@ -61,6 +63,7 @@ public class Main {
         
         */
         
+        /** Testing JPA ***
         ContactService contactService = ctx.getBean("jpaContactService", ContactService.class);
         
         List<Contact> contacts = contactService.findAll();
@@ -91,12 +94,43 @@ public class Main {
         printContacts(contactService.findAllByNativeQuery());
         
         printContactsWithDetails(contactService.findByCriteriaQuery("KING", "THEO"));
+        */
+        
+        com.lvg.springtest.services.springdatajpa.ContactService springJpaContactService 
+                = ctx.getBean("springJpaContactService", 
+                        com.lvg.springtest.services.springdatajpa.ContactService.class);
+        
+        printContacts(springJpaContactService.findAll());
+        printContacts(springJpaContactService.findByFirstName("Scott"));
+        printContacts(springJpaContactService.findByFirstNameAndLastName("Scott", "Tiger"));
+        
+        ContactAuditService springJpaContactAuditService 
+                = ctx.getBean("springDataJpaContactAuditService", 
+                        ContactAuditService.class);
+        
+        printContactsAudit(springJpaContactAuditService.findAll());
+        ContactAudit contactAudit = getTestContactAudit();
+        springJpaContactAuditService.save(contactAudit);
+        contactAudit = springJpaContactAuditService.findById(1L);
+        contactAudit.setFirstName("ZULU");
+        springJpaContactAuditService.save(contactAudit);
+        printContactsAudit(springJpaContactAuditService.findAll());
+        
+        
+        
         
     }
     
     private static void printContacts(List<Contact> contacts){
         LOG.debug("Printing all contacts");
         for(Contact c : contacts){
+            System.out.println(c);
+        }
+    }
+    
+    private static void printContactsAudit(List<ContactAudit> contacts){
+        LOG.debug("Printing all contacts");
+        for(ContactAudit c : contacts){
             System.out.println(c);
         }
     }
@@ -133,6 +167,14 @@ public class Main {
         newContact.addContactTelDetail(ctd1);
         ContactTelDetail ctd2 = new ContactTelDetail("Work", "777888999");
         newContact.addContactTelDetail(ctd2);
+        return newContact;
+    }
+    
+    private static ContactAudit getTestContactAudit(){
+        ContactAudit newContact = new ContactAudit();
+        newContact.setFirstName("Michel");
+        newContact.setLastName("Jordan");
+        newContact.setBirthDate(new Date());        
         return newContact;
     }
 }
