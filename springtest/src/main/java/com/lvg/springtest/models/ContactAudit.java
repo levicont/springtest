@@ -13,6 +13,7 @@ import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
 import org.joda.time.DateTime;
 import org.springframework.data.domain.Auditable;
 
@@ -22,6 +23,7 @@ import org.springframework.data.domain.Auditable;
  */
 @Entity
 @Table(name="contact_audit")
+@Audited
 public class ContactAudit implements Auditable<String, Long>, Serializable{
     private Long id;
     private int version;

@@ -111,11 +111,12 @@ public class Main {
         printContactsAudit(springJpaContactAuditService.findAll());
         ContactAudit contactAudit = getTestContactAudit();
         springJpaContactAuditService.save(contactAudit);
-        contactAudit = springJpaContactAuditService.findById(1L);
+        contactAudit = springJpaContactAuditService.findById(3L);
         contactAudit.setFirstName("ZULU");
         springJpaContactAuditService.save(contactAudit);
         printContactsAudit(springJpaContactAuditService.findAll());
-        
+        System.out.println("OLD Contact with id: 1 ");
+        System.out.println(springJpaContactAuditService.findAuditByRevision(3L, 1));
         
         
         
