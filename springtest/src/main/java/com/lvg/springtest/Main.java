@@ -82,12 +82,15 @@ public class Main {
         
         Contact updContact = contactService.findById(1l);
         updContact.setFirstName("KING");
+        updContact.setLastName("THEO");
         contactService.save(updContact);
         printContactsWithDetails(contactService.findAllWithDetails());
         
         contactService.delete(newContact);
         
         printContacts(contactService.findAllByNativeQuery());
+        
+        printContactsWithDetails(contactService.findByCriteriaQuery("KING", "THEO"));
         
     }
     
